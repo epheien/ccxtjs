@@ -9,7 +9,7 @@ let msleep = (ms) => new Promise(resolve => setTimeout (resolve, ms))
 
 let log = console.log
 let host = _.get(process.argv, 2, '0.0.0.0')
-let port = Number(_.get(process.argv, 3, 12345))
+let port = Number(_.get(process.argv, 3, 3000))
 
 // {
 //   'binance': {'BTC/USDT': exchange}
@@ -194,10 +194,6 @@ async function handleRequest(name, req) {
 }
 
 async function postHandler(ctx) {
-  if (ctx.request.type !== 'application/json') {
-    ctx.throw(400, 'Only accept application/json POST')
-  }
-
   if (ctx.request.path === '/') {
     ctx.response.body = 'Hello POST'
     return
@@ -225,8 +221,9 @@ const main = async function(ctx) {
   }
 }
 
-// FIXME: 无法从 ctx.request.body 获取到 text/plain 的 rawBody
-app.use(bodyParser())
+app.use(bodyParser({
+  enableTypes: ['json', 'form', 'text'],
+}))
 app.use(main)
 app.listen(port, host, () => {
   console.log(`======== Running on http://${host}:${port} ========`)
