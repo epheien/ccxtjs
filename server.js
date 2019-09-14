@@ -180,11 +180,18 @@ async function handleRequest(name, req) {
       default:
         throw new Error('Not Implemented')
     }
-    result = {
-      'code': 0,
-      //'error': '',
-      'data': ret,
+
+    // 兼容老代码
+    if (req.method === 'depth') {
+      result = ret
+    } else {
+      result = {
+        'code': 0,
+        //'error': '',
+        'data': ret,
+      }
     }
+
   } catch (e) {
     //log(e)
     result = {
