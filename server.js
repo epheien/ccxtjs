@@ -9,7 +9,7 @@ let msleep = (ms) => new Promise(resolve => setTimeout (resolve, ms))
 
 let log = console.log
 let host = '0.0.0.0'
-let port = 3000
+let port = 12345
 
 // {
 //   'binance': {'BTC/USDT': exchange}
@@ -135,7 +135,6 @@ async function handleRequest(name, req) {
   req.symbol = norm_symbol(req.symbol)
   let ex = await getCcxtExchange(name, req.symbol, req.apiKey, req.secret,
                                  req.password, req.uid, req.reload)
-  log(req)
   // 重新设置 timeout, 默认 10 秒
   ex.timeout = _.get(req, 'timeout', 10000)
   let result = {}
@@ -174,7 +173,6 @@ async function handleRequest(name, req) {
       case 'eval':
         // NOTE: 务必使用新风格的 req
         // NOTE: 这个时候, params 直接就是函数的 params
-        log(ex[req.function])
         ret = await ex[req.function](...req.params)
         break
       default:
