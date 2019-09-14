@@ -119,6 +119,7 @@ function normRequest(data) {
     'secret': _.get(data, 'secret_key'),
     'password': _.get(data, 'passwd_key'),
     'uid': _.get(data, 'uid_key'),
+    'symbol': _.get(data, 'params.symbol'),
     'method': _.get(data, 'method'),
     'timeout': _.get(data, 'timeout', 10.0) * 1000,
     'params': {
@@ -130,6 +131,8 @@ function normRequest(data) {
 }
 
 async function handleRequest(name, req) {
+  // 规范化符号
+  req.symbol = norm_symbol(req.symbol)
   let ex = await getCcxtExchange(name, req.symbol, req.apiKey, req.secret,
                                  req.password, req.uid, req.reload)
   log(req)
@@ -142,6 +145,7 @@ async function handleRequest(name, req) {
       case 'fetchTicker':
         ret = await ex.fetchTicker(req.symbol)
         break
+      case 'depth': // 兼容老代码
       case 'fetchOrderBook':
         if (req.params.limit < 0) {
           ret = await ex.fetchOrderBook(req.symbol)
