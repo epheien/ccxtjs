@@ -184,7 +184,7 @@ async function handleRequest(name, req) {
       'data': ret,
     }
   } catch (e) {
-    log(e)
+    //log(e)
     result = {
       'code': 1,
       'error': e.toString(),
@@ -217,7 +217,6 @@ async function postHandler(ctx) {
 
   let req = normRequest(data)
   let result = await handleRequest(name, req)
-  log(result)
   ctx.response.body = JSON.stringify(result)
 }
 
