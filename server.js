@@ -202,7 +202,19 @@ async function postHandler(ctx) {
   // http://localhost:3000/{name}
   let name = ctx.request.path.substr(1)
   let body = ctx.request.rawBody
-  let data = JSON.parse(body)
+  let data = {}
+
+  // 处理 body 出错
+  try {
+    data = JSON.parse(body)
+  } catch (e) {
+    ctx.response.body = JSON.stringify({
+      'code': 1,
+      'error': 'body parse error: ' + body,
+    })
+    return
+  }
+
   let req = normRequest(data)
   let result = await handleRequest(name, req)
   log(result)
