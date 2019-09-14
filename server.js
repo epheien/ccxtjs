@@ -49,6 +49,8 @@ async function getCcxtExchange(name, symbol, apiKey, secret,
   let d0 = {}
   if (g_ccxt_exchanges.hasOwnProperty(name)) {
     d0 = g_ccxt_exchanges[name]
+  } else {
+    g_ccxt_exchanges[name] = d0
   }
 
   if (reload && d0.hasOwnProperty(symbol)) {
@@ -65,11 +67,11 @@ async function getCcxtExchange(name, symbol, apiKey, secret,
     } catch (e) {
       throw ('Unsupported Exchange: ' + name)
     }
+    d0[symbol] = exchange
   }
 
   // 初始化
   //exchange.timeout = 1000 * 55    # milliseconds, default 10000
-  d0[symbol] = exchange
   exchange.apiKey = apiKey
   exchange.secret = secret
   exchange.password = password
